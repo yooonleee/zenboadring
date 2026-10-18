@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => data.visibility === 'public');
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const groups = [
+  ['Sessions', 'sessions', post.data.links.sessions],
+  ['Gear', 'gear', post.data.links.gear],
+  ['Places', 'places', post.data.links.places],
+  ['References', 'references', post.data.links.references],
+] as const;
+---
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{post.data.title} | Skate Journal</title>
+  </head>
+  <body>
+    <article>
+      <h1>{post.data.title}</h1>
+      <Content />
+      {groups.map(([label, type, ids]) => (
+        <section>
+          <h2>{label}</h2>
+          <ul>
+            {ids.map((id) => <li><a href={`/${type}/${id}`}>{id}</a></li>)}
+          </ul>
+        </section>
+      ))}
+    </article>
+  </body>
+</html>

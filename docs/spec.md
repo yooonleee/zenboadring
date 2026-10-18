@@ -52,11 +52,13 @@ name: ""
 type: deck | trucks | wheels | bearings | shoes | other
 bought_at: ""
 since: ""
+visibility: public | private
 
 # place
 name: ""
 region: ""
 note: ""
+visibility: public | private
 
 # reference
 url: ""
@@ -65,7 +67,10 @@ kind: app | website | book | article | video | scene
 region: KR | US | JP | ...
 note: "한 줄 메모"
 tags: []
+visibility: public | private
 ```
+
+모든 콘텐츠 유형은 `visibility`를 반드시 가진다. 공개 빌드는 `public` 콘텐츠만 컬렉션과 정적 페이지에 포함한다.
 
 ## 폴더 구조 (제안)
 ```

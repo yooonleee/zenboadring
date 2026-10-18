@@ -1,0 +1,30 @@
+---
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const collectionNames = ['sessions', 'gear', 'places', 'references'] as const;
+  const paths = await Promise.all(collectionNames.map(async (type) => {
+    const entries = await getCollection(type, ({ data }) => data.visibility === 'public');
+    return entries.map((entry) => ({ params: { type, id: entry.id }, props: { entry } }));
+  }));
+  return paths.flat();
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const title = 'title' in entry.data ? entry.data.title : entry.data.name ?? entry.id;
+---
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title} | Skate Journal</title>
+  </head>
+  <body>
+    <article>
+      <h1>{title}</h1>
+      <Content />
+    </article>
+  </body>
+</html>
